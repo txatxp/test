@@ -28,13 +28,14 @@ export default {
 
     window.Array.prototype.getDifferentArrayLength2 = function () {
 	let arrlen = []
+	let arrlen2 = []
 	let yArr = this
 	console.log(yArr)
 	var getArray = function (res) {
 		let len = 0
 		let arr = []
 		yArr.forEach(function (item, index) {
-			if (item.matanr === res) {
+			if (item.matanr === res.matanr) {
 				arr.push(item)
 			}
 		})
@@ -42,14 +43,17 @@ export default {
 			return someItem.wz !== ''
 		})
 		if (!isEmaty) {
-			arrlen.push(1)
+			arrlen.push(res)
 		}
 	}
 	yArr.forEach((item, index) => {
-		getArray(item.matanr)
+		getArray(item)
 	})
-	return arrlen.length
-    }
+	arrlen.forEach((item, index) => {
+		arrlen2.push(item.matanr)
+	})
+	return [...new Set(arrlen2)].length
+     }
 
 
     api.carrierNumberAjax(data).then(r => {
