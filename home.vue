@@ -26,28 +26,20 @@ export default {
   },
   async created () {
 
-    Array.prototype.getDifferentArrayLength = function () {
+    window.Array.prototype.getDifferentArrayLength = function () {
       let arrlen = []
       let yArr = this
-      var getArray = function (value) {
+      console.log(yArr)
+      var getArray = function () {
         let len = 0
         let arr = []
         yArr.forEach(function (item, index) {
-          if (item.matnr == value) {
-            arr.push(item)
-          }
+          arr.push(item.matanr)
         })
-        len = arr.length
-        return len
+        len = [...new Set(arr)]
+        return len.length
       }
-      yArr.forEach(function (item, index) {
-        var len = getArray(item.matnr)
-        if (len <= 1) {
-          arrlen.push(item)
-        }
-      })
-      return 	arrlen.length;
-      
+      return getArray()
     }
 
 
