@@ -26,20 +26,29 @@ export default {
   },
   async created () {
 
-    window.Array.prototype.getDifferentArrayLength = function () {
-      let arrlen = []
-      let yArr = this
-      console.log(yArr)
-      var getArray = function () {
-        let len = 0
-        let arr = []
-        yArr.forEach(function (item, index) {
-          arr.push(item.matanr)
-        })
-        len = [...new Set(arr)]
-        return len.length
-      }
-      return getArray()
+    window.Array.prototype.getDifferentArrayLength2 = function () {
+	let arrlen = []
+	let yArr = this
+	console.log(yArr)
+	var getArray = function (res) {
+		let len = 0
+		let arr = []
+		yArr.forEach(function (item, index) {
+			if (item.matanr === res) {
+				arr.push(item)
+			}
+		})
+		let isEmaty = arr.some((someItem, someIndex) => {
+			return someItem.wz !== ''
+		})
+		if (!isEmaty) {
+			arrlen.push(1)
+		}
+	}
+	yArr.forEach((item, index) => {
+		getArray(item.matanr)
+	})
+	return arrlen.length
     }
 
 
