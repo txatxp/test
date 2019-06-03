@@ -60,7 +60,7 @@ export default {
           let data = r.body
           if (data.data.length) {
             this.tableList = data.data
-            let len = this.tableList.getDifferentArrayLength()
+            let len = this.tableList.getDifferentArrayLength2()
             console.log(len, '这就是你要的不同数字的元素的个数')
           }
         }
