@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<script type="text/javascript">
+
+
+let arr1 = [{status: 1}, { status: 1 }, { status: null }]
+window.Array.prototype.getStatus = function () {
+	let arr = this
+	let bol1 = arr.some((item, index) => {
+		return parseInt(item.status) === 1
+	})
+	let bol2 = arr.some((item, index) => {
+		return parseInt(item.status) === 0
+	})
+	let bol3 = arr.every((item, index) => {
+		return typeof item.status === "object"
+	})
+	let status = ''
+	if (bol1) {
+		status = 'A'
+	}
+	if (bol2) {
+		status = 'B'
+	}
+	if (bol3) {
+		status = 'AB'
+	}
+	return status
+}
+const status = arr1.getStatus()
+
+
+
+</script>
+</body>
+</html>
