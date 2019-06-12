@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<script type="text/javascript">
+
+
+// let arr1 = [{status: 1}, { status: 1 }, { status: null }]
+// window.Array.prototype.getStatus = function () {
+// 	let arr = this
+// 	let bol1 = arr.some((item, index) => {
+// 		return parseInt(item.status) === 1
+// 	})
+// 	let bol2 = arr.some((item, index) => {
+// 		return parseInt(item.status) === 0
+// 	})
+// 	let bol3 = arr.every((item, index) => {
+// 		return typeof item.status === "object"
+// 	})
+// 	let status = ''
+// 	if (bol1) {
+// 		status = 'A'
+// 	}
+// 	if (bol2) {
+// 		status = 'B'
+// 	}
+// 	if (bol3) {
+// 		status = 'AB'
+// 	}
+// 	return status
+// }
+// const status = arr1.getStatus()
+let arrobj = [
+	{
+		matanr: '1',
+		receiveQty: '1'
+	},
+	{
+		matanr: '1',
+		receiveQty: '0'
+	},
+	{
+		matanr: '3',
+		receiveQty: null
+	},
+	{
+		matanr: '4',
+		receiveQty: ''
+	},
+	{
+		matanr: '5',
+		receiveQty: '0'
+	}
+]
+window.Array.prototype.getDifferentArrayLength2 = function () {
+	let arrlen = []
+	let arrlen2 = []
+	let yArr = this
+	// 为了防止后台返回receiveQty不统一情况，这里做统一处理，反正为null，''，undefind，0都同意改成'0'
+	yArr.forEach(function (item, index) {
+		if (!item.receiveQty) {
+			item.receiveQty = '0'
+		}
+	})
+	var getArray = function (res) {
+		let len = 0
+		let arr = []
+		// 取出相同物料号的一组
+		yArr.forEach(function (item, index) {
+			if (item.matanr === res.matanr) {
+				arr.push(item)
+			}
+		})
+		// 相同物料号中只要有一组不为0的返回true
+		let isEmaty = arr.some((someItem, someIndex) => {
+			return someItem.receiveQty !== '0'
+		})
+		// 如果一组相同物料号里的someItem.receiveQty都为空则放到数组里。
+		if (!isEmaty) {
+			arrlen.push(res)
+		}
+	}
+	// 遍历每种情况
+	yArr.forEach((item, index) => {
+		getArray(item)
+	})
+	// 把所有符合条件的的物料号放到数组里
+	arrlen.forEach((item, index) => {
+		arrlen2.push(item.matanr)
+	})
+	// 返回最终去重个数
+	return [...new Set(arrlen2)].length
+}
+
+let res = arrobj.getDifferentArrayLength2()
+console.log(res, '%%%%%%')
+
+</script>
+</body>
+</html>
