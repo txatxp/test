@@ -1,103 +1,1666 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title></title>
+    <meta charset="utf-8">
+    <title>物料损耗监控看板</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <!--<link href="../../js/zxf_page.css?v=${ver}" rel="stylesheet" type="text/css">-->
+    <style type="text/css">
+		html,body{
+			width:1920px;
+			height:1078px;
+			background:#ccc;
+		}
+		*{margin:0px;padding: 0px;}
+		.main {
+			position: absolute;
+			width:100%;
+			height: 100%;
+		}
+		.main-top {
+			position: absolute;
+			height: 45%;
+			left:0px;
+			top:50px;
+			width:100%;
+		}
+		.main-bottom {
+			position: absolute;
+			height: 45%;
+			left:0px;
+			bottom:50px;
+			width:100%;
+		}
+		.echarts1,.echarts2 {
+			position:absolute;
+			left:10px;
+			top:10px;
+			bottom:10px;
+			width:70%;
+		}
+
+		.echarts1-table,.echarts2-table {
+			position:absolute;
+			bottom:10px;
+			right:0px;
+			top:0px;
+			width:30%;
+		}
+		#echarts1,#echarts2,.echarts1-box {
+			position: absolute;
+			height: 100%;
+			top:0px;
+			left:0px;
+			right:10px;
+			background: #fff;
+		}
+		.setType {
+			height:60px;
+			position: absolute;
+			width: 420px;
+			left:50%;
+			z-index: 9999;
+			top:-2px;
+		}
+		.setTypeBox {
+			height: 30px;
+			position: relative;
+			top:15px;
+			text-align:center;
+		}
+		.setTypeBox span {
+			display: inline-block;
+			padding:5px 10px;
+			background:#8D8D8D;
+			color:#fff;
+		}
+		.echarts1-tablecon,.echarts2-tablecon {
+			position: absolute;
+			bottom:0px;
+			left:10px;
+			right:10px;
+			background: #fff;
+			top:10px;
+			overflow: hidden;
+		}
+		.echarts2-tablecon,.echarts2 {
+			top:0px;
+		}
+		.table-con {
+			padding: 10px;
+		}
+		.tb,.th,.td {
+			border:1px solid #000;
+			border-collapse: collapse;
+		}
+		.tb{
+			width:100%;
+			margin-top:10px;
+		}
+		.th,.td{
+			padding:5px 10px;
+		}
+		.th {
+			font-size: 15px;
+		}
+		.td{
+			font-size: 14px;
+			color:#666;
+			cursor:pointer;
+		}
+		.title-h5 {
+			font-size: 16px;
+		}
+		.echart1-modalcon {
+			padding: 15px;
+			padding-top:10px;
+		}
+		#echarts-box-3 {
+			width: 600px;
+			height: 300px;
+			position: relative;
+		}
+		#echarts3 {
+			position: absolute;
+			height: 100%;
+			left:0px;
+			right:0px;
+		}
+		.mid-top {
+			width: 96%;
+			height:50px;
+			line-height: 50px;
+			background: #1E9FFF;
+			display: flex;
+			align-items: center; /*垂直居中*/
+			font-weight: bold;
+			justify-content: space-between;
+			align-content: flex-start;
+			padding: 0px 2%;
+			color:#fff;
+			-moz-justify-content:space-between;
+			-webkit-justify-content:space-between;
+			-ms-justify-content:space-between;
+			-o-justify-content:space-between;
+		}
+		.midtop-name {
+			width: 70%;
+		}
+		.midtop-name span {
+			display: inline-block;
+			width: 15%;
+			margin-right: 5%;
+		}
+		.midtop-time span i, .midtop-name span i {
+			font-style: normal;
+			padding:0 10px;
+		}
+		.smt-footer {
+			position: absolute;
+			bottom: 0px;
+			clear: both;
+			width:100%;
+			height:50px;
+			line-height: 50px;
+			color:#fff;
+			text-align: center;
+			font-size: 20px;
+			background: #1E9FFF;
+		}
+		.colorRed {
+		   color:red;
+		}
+		#cart-room span {
+		 cursor:pointer
+		}
+        .echarts1-header {
+            width:100%;
+            -webkit-box-flex:1;
+            display:-webkit-box;
+        }
+        .echarts1-box {
+            display:-webkit-box;-webkit-box-orient:vertical;
+        }
+        .echarts1-con1,.echarts1-con2,.echarts1-con3,.echarts1-con4 {
+            -webkit-box-flex:1;position:relative;
+        }
+        .echarts1-con1_1,.echarts1-con1_2,.echarts1-con1_3,.echarts1-con1_4 {
+            position: absolute;width:100%;height: 100%;top:0px;left:0px;
+        }
+	</style>
 </head>
 <body>
+<div class="main">
+    <!--上部-->
+    <div class="mid-top">
+        <div class="midtop-name">
+            <!--<span>线长:<i id="userName">4455</i></span>-->
+            <!--<span>电话：<i id="smtPhone">4455</i></span>-->
+            <!--<span>ME:<i id="smtMeName">5455</i></span>-->
+            <!--<span>电话：<i id="smtMePhone">585</i></span>-->
+            <span style="display:block;width:100%;text-align:center;font-size:26px;">物料损耗监控看板</span>
+        </div>
+        <div class="midtop-time">
+            <span>日期：<i id="dateYM"></i></span>
+            <span>时间：<i id="dateHS"> </i></span>
+        </div>
+    </div>
+    <!--中部-->
+    <div class="main-top">
+        <div class="echarts1">
+            <!-- <div class="setType">
+                <div class="setTypeBox">
+                    <label>日<input type="radio" name="radio" value="1" checked="checked"></label>
+                    <label>月<input type="radio" name="radio" value="2"></label>
+                </div>
+            </div>
+            <div id="echarts1"></div> -->
+            <div class="echarts1-box">
+                <div class="echarts1-header">
+                    <div class="echarts1-con1">
+                        <div class="setType">
+                            <div class="setTypeBox">
+                                <label>日<input type="radio" name="radio" value="1" checked="checked"></label>
+                                <label>月<input type="radio" name="radio" value="2"></label>
+                            </div>
+                        </div>
+                        <div class="echarts1-con1_1"></div>
+                    </div>
+                    <script type="text/javascript">
+                        var echarts1_con1 = function (_this, echart1Obj) {
+                            var echart1 = echarts.init($(".echarts1-con1_1").get(0))
+                            // 损耗量
+                            // var barData = [];
+                            // 日期，天、月
+                            var number = [];
+                            // // 整体损耗率
+                            var lineData = [];
+                            // 整体损耗率目标
+                            var lineDataM = []
+                            var width = 20
+                            var setL = function(datas) {
+                               return datas.map(function(item, index){
+                                 return item < 0 ? datas[index] = 0.00 : datas[index] = item
+                               })
+                            }
+                            var getDData = function () {
+                                number = _this.getData(echart1Obj, 'day', 'string')
+                                barData = []
+                                // 损耗量
+                                // barData = _this.getData(echart1Obj, 'sonLossAmount') || []
+                                // // 整体损耗率
+                                lineData = setL(_this.getData(echart1Obj, 'wknumLossRate')) || []
+                                lineDataM = setL(_this.getData(echart1Obj, 'wknumLossRateGoal')) || []
+                                console.log(lineDataM, 'lineDataMlineDataMlineDataMlineDataMlineDataMlineDataM')
+                                width = 20
+
+                            }
+
+                            var setSetting = function () {
+                                var setting = {
+                                    grid: {
+                                        left: 60,
+                                    },
+                                    title: {
+                                        text: '整体损耗率',
+                                        x:'center',
+                                        top: 10,
+                                        textAlign:'center'
+                                    },
+                                    legend: {
+                                        // '损耗数量', '整体损耗率', '整体损耗率目标', '设备抛料率', '高损物料抛料率'
+                                        data: [
+                                           
+                                            {
+                                                name: '整体损耗率',
+                                                icon: 'rect'
+                                            }
+                                        ],
+                                        align: 'left',
+                                        center: 'center',
+                                        bottom: 0,
+                                        type: 'scroll'
+                                    },
+                                    tooltip: {
+                                                trigger: 'axis',
+                                                axisPointer: {
+                                                    type: 'cross',
+                                                    label: {
+                                                        backgroundColor: '#6a7985'
+                                                    }
+                                                }
+                                            },
+                                    xAxis: {
+                                        data: number
+                                    },
+                                    yAxis: [
+                                        {
+                                            axisLine: {
+                                                show: true,
+                                                onZeroAxisIndex: 1
+                                            },
+                                            axisLabel: {
+                                                interval: 1,
+                                                formatter: '{value}%'
+                                            },
+                                            min: 0,
+                                            max: _this.getMax2(_this.getData(echart1Obj, 'wknumLossRate')),
+                                            axisTick: {
+                                                alignWithLabel: true
+                                            },
+                                            axisPointer: {
+                                                show: true,
+                                                label: {
+                                                    show: true
+                                                }
+                                            },
+                                            splitLine: {
+                                                show: true,
+                                                interval: 2
+                                            }
+                                        },
+                                    ],
+                                    series: [
+                                        
+                                        {
+                                            type:'line',
+                                            name: '整体损耗率',
+                                            data: lineData,
+                                            itemStyle: {
+                                                color: '#17174c'
+                                            },
+                                            label: {
+                                                show: true,
+                                                color:'#000',
+                                                formatter:function(item, index){
+                                                    return item.data + '%'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            type:'line',
+                                            name: '整体损耗率目标',
+                                            data: lineDataM,
+                                            itemStyle: {
+                                                color: 'orange'
+                                            },
+                                            label: {
+                                                show: true,
+                                                color:'#000',
+                                                formatter:function(item, index){
+                                                    return item.data + '%'
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                                return setting
+                            }
+
+                            getDData()
+                            echart1.setOption(setSetting())
+
+
+
+                            $(window).resize(function(){
+                                echart1.resize()
+                            })
+
+                            // 柱状图点击事件
+                            window.ltEcharts = {
+                                echarts1_con1: echart1
+                            }
+                        }
+                    </script>
+                    <div class="echarts1-con2">
+                        <div class="echarts1-con1_2"></div>
+                    </div>
+                    <script type="text/javascript">
+                        var echarts1_con2 = function (_this, echart1Obj) {
+                            var echart1 = echarts.init($(".echarts1-con1_2").get(0))
+                            // 损耗量
+                            // var barData = [];
+                            // 日期，天、月
+                            var number = [];
+                            // // 整体损耗率目标
+                            var lineDataRed = []
+                            var lineDataRedM = []
+                            var width = 20
+                            var setL = function(datas) {
+                               return datas.map(function(item, index){
+                                 return item < 0 ? datas[index] = 0.00 : datas[index] = item
+                               })
+                            }
+                            var getDData = function () {
+                                number = _this.getData(echart1Obj, 'day', 'string')
+                                barData = []
+                                // // 整体损耗率目标
+                                lineDataRed = _this.getData(echart1Obj, 'highWknumLossRate') || []
+                                lineDataRedM = _this.getData(echart1Obj, 'highWknumLossRateGoal') || []
+                                width = 20
+
+                            }
+
+                            var setSetting = function () {
+                                var setting = {
+                                    grid: {
+                                        left: 60,
+                                    },
+                                    title: {
+                                        text: '高损物料损耗率',
+                                        x:'center',
+                                        top: 10,
+                                        textAlign:'center'
+                                    },
+                                    legend: {
+                                        // '损耗数量', '整体损耗率', '整体损耗率目标', '设备抛料率', '高损物料抛料率'
+                                        data: [
+                                            {
+                                                name: '整体损耗率目标',
+                                                icon: 'rect'
+                                            },
+                                            
+                                        ],
+                                        align: 'left',
+                                        center: 'center',
+                                        bottom: 0,
+                                        type: 'scroll'
+                                    },
+                                    tooltip: {
+                                                trigger: 'axis',
+                                                axisPointer: {
+                                                    type: 'cross',
+                                                    label: {
+                                                        backgroundColor: '#6a7985'
+                                                    }
+                                                }
+                                            },
+                                    xAxis: {
+                                        data: number
+                                    },
+                                    yAxis: [
+                                        {
+                                            axisLine: {
+                                                show: true,
+                                                onZeroAxisIndex: 1
+                                            },
+                                            axisLabel: {
+                                                interval: 1,
+                                                formatter: '{value}%'
+                                            },
+                                            min: 0,
+                                            max: _this.getMax2(_this.getData(echart1Obj, 'wknumLossRate')),
+                                            axisTick: {
+                                                alignWithLabel: true
+                                            },
+                                            axisPointer: {
+                                                show: true,
+                                                label: {
+                                                    show: true
+                                                }
+                                            },
+                                            splitLine: {
+                                                show: true,
+                                                interval: 2
+                                            }
+                                        },
+                                    ],
+                                    series: [
+                                        
+                                        {
+                                            type:'line',
+                                            name: '高损整体损耗率',
+                                            data: lineDataRed,
+                                            itemStyle: {
+                                                color: '#17174c'
+                                            },
+                                            label: {
+                                                show: true,
+                                                color:'#000',
+                                                formatter:function(item, index){
+                                                    return item.data + '%'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            type:'line',
+                                            name: '高损整体损耗率目标',
+                                            data: lineDataRedM,
+                                            itemStyle: {
+                                                color: 'orange'
+                                            },
+                                            label: {
+                                                show: true,
+                                                color:'orange',
+                                                formatter:function(item, index){
+                                                    return item.data + '%'
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                                return setting
+                            }
+
+                            getDData()
+                            echart1.setOption(setSetting())
+
+
+
+                            $(window).resize(function(){
+                                echart1.resize()
+                            })
+
+                            // 柱状图点击事件
+                            window.ltEcharts = {
+                                echarts1_con2: echart1
+                            }
+                        }
+                    </script>
+                </div>
+                <div class="echarts1-header">
+                    <div class="echarts1-con3">
+                        <div class="echarts1-con1_3"></div>
+                    </div>
+                    <script type="text/javascript">
+                        var echarts1_con3 = function (_this, echart1Obj) {
+                            var echart1 = echarts.init($(".echarts1-con1_3").get(0))
+                            // 损耗量
+                            // var barData = [];
+                            // 日期，天、月
+                            var number = [];
+                            // // 设备抛料率
+                            var lineDataSb = []
+                            var lineDataSbM = []
+                            // // 高损物料抛料率
+                            // var lineDataG = []
+                            var width = 20
+                            var setL = function(datas) {
+                               return datas.map(function(item, index){
+                                 return item < 0 ? datas[index] = 0.00 : datas[index] = item
+                               })
+                            }
+                            var getDData = function () {
+                                number = _this.getData(echart1Obj, 'day', 'string')
+                                barData = []
+                                // // 设备抛料率
+                                lineDataSb = _this.getData(echart1Obj, 'scrapRate') || []
+                                lineDataSbM = _this.getData(echart1Obj, 'scrapRateGoal') || []
+                                // // 高损物料抛料率
+                                // lineDataG = _this.getData(echart1Obj, 'highMatnrRate') || []
+                                width = 20
+
+                            }
+
+                            var setSetting = function () {
+                                var setting = {
+                                    grid: {
+                                        left: 60,
+                                    },
+                                    title: {
+                                        text: '设备抛料率',
+                                        x:'center',
+                                        top: 10,
+                                        textAlign:'center'
+                                    },
+                                    legend: {
+                                        // '损耗数量', '整体损耗率', '整体损耗率目标', '设备抛料率', '高损物料抛料率'
+                                        data: [
+                                            {
+                                                name: '设备抛料率',
+                                                icon: 'rect'
+                                            }
+                                        ],
+                                        align: 'left',
+                                        center: 'center',
+                                        bottom: 0,
+                                        type: 'scroll'
+                                    },
+                                    tooltip: {
+                                                trigger: 'axis',
+                                                axisPointer: {
+                                                    type: 'cross',
+                                                    label: {
+                                                        backgroundColor: '#6a7985'
+                                                    }
+                                                }
+                                            },
+                                    xAxis: {
+                                        data: number
+                                    },
+                                    yAxis: [
+                                        {
+                                            axisLine: {
+                                                show: true,
+                                                onZeroAxisIndex: 1
+                                            },
+                                            axisLabel: {
+                                                interval: 1,
+                                                formatter: '{value}%'
+                                            },
+                                            min: 0,
+                                            max: _this.getMax2(_this.getData(echart1Obj, 'wknumLossRate')),
+                                            axisTick: {
+                                                alignWithLabel: true
+                                            },
+                                            axisPointer: {
+                                                show: true,
+                                                label: {
+                                                    show: true
+                                                }
+                                            },
+                                            splitLine: {
+                                                show: true,
+                                                interval: 2
+                                            }
+                                        },
+                                    ],
+                                    series: [
+                                    
+                                        {
+                                            type:'line',
+                                            name: '设备抛料率',
+                                            data: lineDataSb,
+                                            itemStyle: {
+                                                color: '#17174c'
+                                            },
+                                            label: {
+                                                show: true,
+                                                color:'#000',
+                                                formatter:function(item, index){
+                                                    return item.data + '%'
+                                                }
+                                            }
+                                        },
+                                        {
+                                            type:'line',
+                                            name: '设备抛料率',
+                                            data: lineDataSbM,
+                                            itemStyle: {
+                                                color: 'orange'
+                                            },
+                                            label: {
+                                                show: true,
+                                                color:'#000',
+                                                formatter:function(item, index){
+                                                    return item.data + '%'
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                                return setting
+                            }
+
+                            getDData()
+                            echart1.setOption(setSetting())
+
+
+
+                            $(window).resize(function(){
+                                echart1.resize()
+                            })
+
+                            // 柱状图点击事件
+                            window.ltEcharts = {
+                                echarts1_con3: echart1
+                            }
+                        }
+                    </script>
+                    <div class="echarts1-con4">
+                        <div class="echarts1-con1_4"></div>
+                    </div>
+                    <script type="text/javascript">
+                        var echarts1_con4 = function (_this, echart1Obj) {
+                            var echart1 = echarts.init($(".echarts1-con1_4").get(0))
+                            // 日期，天、月
+                            var number = [];
+                            // // 高损物料抛料率
+                            var lineDataG = []
+                            var lineDataGM = []
+                            var width = 20
+                            var setL = function(datas) {
+                               return datas.map(function(item, index){
+                                 return item < 0 ? datas[index] = 0.00 : datas[index] = item
+                               })
+                            }
+                            var getDData = function () {
+                                number = _this.getData(echart1Obj, 'day', 'string')
+                                barData = []
+                                lineDataG = _this.getData(echart1Obj, 'highMatnrRate') || []
+                                lineDataGM = _this.getData(echart1Obj, 'highMatnrRateGoal') || []
+                                width = 20
+
+                            }
+
+                            var setSetting = function () {
+                                var setting = {
+                                    grid: {
+                                        left: 60,
+                                    },
+                                    title: {
+                                        text: '高损物料抛料率',
+                                        x:'center',
+                                        top: 10,
+                                        textAlign:'center'
+                                    },
+                                    legend: {
+                                        // '损耗数量', '整体损耗率', '整体损耗率目标', '设备抛料率', '高损物料抛料率'
+                                        data: [
+                                            {
+                                                name: '高损物料抛料率',
+                                                icon: 'rect'
+                                            }
+                                        ],
+                                        align: 'left',
+                                        center: 'center',
+                                        bottom: 0,
+                                        type: 'scroll'
+                                    },
+                                    tooltip: {
+                                                trigger: 'axis',
+                                                axisPointer: {
+                                                    type: 'cross',
+                                                    label: {
+                                                        backgroundColor: '#6a7985'
+                                                    }
+                                                }
+                                            },
+                                    xAxis: {
+                                        data: number
+                                    },
+                                    yAxis: [
+                                        {
+                                            axisLine: {
+                                                show: true,
+                                                onZeroAxisIndex: 1
+                                            },
+                                            axisLabel: {
+                                                interval: 1,
+                                                formatter: '{value}%'
+                                            },
+                                            min: 0,
+                                            max: _this.getMax2(_this.getData(echart1Obj, 'wknumLossRate')),
+                                            axisTick: {
+                                                alignWithLabel: true
+                                            },
+                                            axisPointer: {
+                                                show: true,
+                                                label: {
+                                                    show: true
+                                                }
+                                            },
+                                            splitLine: {
+                                                show: true,
+                                                interval: 2
+                                            }
+                                        },
+                                    ],
+                                    series: [
+                                    
+                                        {
+                                             type:'line',
+                                             name: '高损物料抛料率',
+                                             data: lineDataG,
+                                             itemStyle: {
+                                                 color: '#17174c'
+                                             },
+                                             label: {
+                                                 show: true,
+                                                 color:'#000',
+                                                 formatter:function(item, index){
+                                                     return item.data + '%'
+                                                 }
+                                             }
+                                         },
+                                         {
+                                             type:'line',
+                                             name: '高损物料抛料率',
+                                             data: lineDataGM,
+                                             itemStyle: {
+                                                 color: 'orange'
+                                             },
+                                             label: {
+                                                 show: true,
+                                                 color:'#000',
+                                                 formatter:function(item, index){
+                                                     return item.data + '%'
+                                                 }
+                                             }
+                                         }
+                                    ]
+                                }
+                                return setting
+                            }
+
+                            getDData()
+                            echart1.setOption(setSetting())
+
+
+
+                            $(window).resize(function(){
+                                echart1.resize()
+                            })
+
+                            // 柱状图点击事件
+                            window.ltEcharts = {
+                                echarts1_con4: echart1
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="echarts1-table">
+            <div class="echarts1-tablecon">
+                <div class="table-con">
+                    <h5 class="title-h5">损耗排名-按单表（当日）</h5>
+                    <table class="tb" id="table1">
+                        <tr>
+                            <th class="th">工单</th>
+                            <th class="th">线体</th>
+                            <th class="th">当日损耗数</th>
+                            <th class="th">当日损耗率</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-bottom">
+        <div class="echarts2">
+            <div class="setType">
+                <div class="setTypeBox" id="cart-room">
+                    <label>日<input type="radio" name="radio2" value="1" checked="checked"></label>
+                    <label>月<input type="radio" name="radio2" value="2"></label>
+                </div>
+            </div>
+            <div id="echarts2"></div>
+        </div>
+        <div class="echarts2-table">
+            <div class="echarts2-tablecon">
+                <div class="table-con">
+                    <h5 class="title-h5">损耗排名-按高损物料（当日）</h5>
+                    <table class="tb" id="table2">
+                        <tr>
+                            <th class="th">物料</th>
+                            <th class="th">当日机器抛料数</th>
+                            <th class="th">当日机抛率</th>
+                            <th class="th">当月机抛率</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--底部-->
+    <div class="smt-footer">
+        <p>----提高质量、提升效率、降低成本----</p>
+    </div>
+</div>
+<!-- 弹出线体损耗监控报表-->
+<div class="echart1-modal" style="position:absolute;z-index: 9999999;top:-99999999px;left:-9999999999px;">
+    <table class="tb">
+        <tr>
+            <th class="th">工厂</th>
+            <th class="th">日期</th>
+            <th class="th">车间</th>
+            <th class="th">产线</th>
+            <th class="th">班别</th>
+            <th class="th">工单</th>
+            <th class="th">料号</th>
+            <th class="th">标准用量</th>
+            <th class="th">发斗数</th>
+            <th class="th">退斗数</th>
+            <th class="th">损耗数</th>
+            <th class="th">损耗率</th>
+            <th class="th">是否高损物料</th>
+            <th class="th">损耗原因</th>
+            <th class="th">描述</th>
+            <th class="th">改善对策</th>
+            <th class="th">责任人</th>
+        </tr>
+        <tr>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+            <td class="td">1</td>
+        </tr>
+
+    </table>
+</div>
+<!-- 弹出物料损耗监控报表 -->
+<div class="echart1-modal2" style="position:absolute;z-index: 9999999;top:-99999999px;left:-9999999999px;">
+    <table class="tb" id="echart1-modal2">
+        <tr>
+            <th class="th">序号</th>
+            <th class="th">工单号</th>
+            <th class="th">工单数量</th>
+            <th class="th">抛料数</th>
+            <th class="th">抛料率</th>
+        </tr>
+        
+    </table>
+</div>
+<!-- 弹出按工单表格数据 -->
+<div class="echart1-modal3" style="position:absolute;z-index: 9999999;top:-99999999px;left:-9999999999px;">
+    <table class="tb" id="echart1-modal3">
+        <tr>
+            <th class="th">工单</th>
+            <th class="th">班别</th>
+            <th class="th">损耗数</th>
+            <th class="th">标准用量</th>
+            <th class="th">发料数</th>
+            <th class="th">退料数</th>
+            <th class="th">产线</th>
+            <th class="th">工单报工完成时间</th>
+            <th class="th">料号</th>
+            <th class="th">损耗率</th>
+        </tr>
+
+    </table>
+</div>
+
+<!-- 弹出按高损耗表格数据 -->
+<div class="echart1-modal4" style="position:absolute;z-index: 9999999;top:-99999999px;left:-9999999999px;">
+    <table class="tb" id="echart1-modal4">
+        <tr>
+            <th class="th">序号</th>
+            <th class="th">日期</th>
+            <th class="th">产线</th>
+            <th class="th">高损物料</th>
+            <th class="th">取料数</th>
+            <th class="th">抛料数</th>
+            <th class="th">抛料率</th>
+            <!--<th class="th">目标损耗数</th>-->
+            <!--<th class="th">目标损耗率</th>-->
+        </tr>
+    </table>
+</div>
+<!-- <script src="${rc.getContextPath()}/report/js/jquery-1.11.0.min.js"></script>
+<script src="${rc.getContextPath()}/report/js/echarts.min.js"></script>
+<script src="${rc.getContextPath()}/report/js/jquery.nicescroll.js"></script>
+<script src="${rc.getContextPath()}/report/js/zxf_page.js"></script>
+<script src="${rc.getContextPath()}/report/layer/layer.js"></script>
+<script src="${rc.getContextPath()}/report/js/echarts1.js"></script>
+<script src="${rc.getContextPath()}/report/js/echarts2.js"></script> -->
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="js/zxf_page.js"></script>
+<script type="text/javascript" src="jquery.nicescroll.js"></script>
+<script type="text/javascript" src="echarts.min.js"></script>
+<script type="text/javascript" src="layer/layer.js"></script>
+<script type="text/javascript" src="echarts1.js"></script>
+<script type="text/javascript" src="echarts2.js"></script>
+<script>
+    var echartsTimeClass = 0
+    var echartsTimeClassType = 'W91102'
+	var bol = false
+	var s = 0
+    $(function(){
+        var echarts1Data = {}
+        var timeType = 0
+        var echart1Obj = {
+            ajax: function (type, timeType, workType) {
+                var _this = this
+                if (type == 's') {
+                	s = timeType
+                }
+                $.ajax({
+                    // url: '${kanBanDataUrl}' + 'getWknumLossKanBanData' + '?menuCode=${menuCode}',
+                    url: 'https://www.xiaoweiba8.com/getechartdata1',
+                    data: {workShopType: timeType, floorCode: workType, wknumType: timeType},
+                    type: 'get',
+                    dataType:'json',
+                    success: function(echarts1Data){
+                        if (type) {
+		                	if (type == 's') {
+			                    // echarts1Fn(_this, echarts1Data)
+                                echarts1_con1(_this, echarts1Data)
+                                echarts1_con2(_this, echarts1Data)
+                                echarts1_con3(_this, echarts1Data)
+                                echarts1_con4(_this, echarts1Data)
+
+			                } else if (type == 'x') {
+			                    echarts2Fn(_this, echarts1Data)
+			                }
+		                } else {
+		                	_this.setCJ(echarts1Data)
+
+		                    _this.setTabelData(echarts1Data)
+		                    _this.setTabelData2(echarts1Data)
+		                    // echarts1Fn(_this, echarts1Data)
+                             echarts1_con1(_this, echarts1Data)
+                             echarts1_con2(_this, echarts1Data)
+                             echarts1_con3(_this, echarts1Data)
+                             echarts1_con4(_this, echarts1Data)
+		                    echarts2Fn(_this, echarts1Data)
+                           
+		                }
+		                if (!bol) {
+		                	// 防止第二次被调用这个函数时，再次初始化modal1的代码
+		                	bol = true
+		                	modalEchartGlobal()
+		                }
+                    }
+                })
+
+            },
+            setCJ: function (data) {
+				var html = ''
+                if (data.code == 'success' && data.data instanceof Object) {
+                    // 检测后台封装到wknumLossKanbanItemList的数据是有数据的，不是空数组，并且有这个字段否则当没数据处理
+                    if (data.data.floorCodeList && data.data.floorCodeList.length) {
+                        data.data.floorCodeList.forEach(function (item, index) {
+                            if (index == 0) {
+                                echartsTimeClassType = item
+                            }
+                            html += '<span data-type="'+item+'" class="spanColor" style="margin-right: 8px;">'+'第' + (index + 1) + '车间' +'</span>'
+                        })
+                        $("#cart-room").append(html)
+                        $("#cart-room span").eq(0).css('background','red')
+                    }
+                }
+            },
+            setTabelData: function (data) {
+                var html = ''
+                if (data.code == 'success' && data.data instanceof Object) {
+                    // 检测后台封装到wknumLossKanbanItemList的数据是有数据的，不是空数组，并且有这个字段否则当没数据处理
+                    if (data.data.maxWknumLossKanbanItemList && data.data.maxWknumLossKanbanItemList.length) {
+                        data.data.maxWknumLossKanbanItemList.forEach(function (item, index) {
+                            html += '<tr class="agd" data-id="1" data-wknum="'+item.wknum+'" data-type="gd">'
+                                +'<td class="td">'+item.wknum+'</td>'
+                                +'<td class="td">'+item.pline+'</td>'
+                                +'<td class="td">'+item.sonLossAmount+'</td>'
+                                +'<td class="td">'+item.wknumLossRate+'</td>'
+                                +'</tr>'
+                        })
+                        $("#table1").append(html)
+                    }
+                }
+            },
+            setTabelData2: function (data) {
+                var html = ''
+                if (data.code == 'success' && data.data instanceof Object) {
+                    // 检测后台封装到wknumLossKanbanItemList的数据是有数据的，不是空数组，并且有这个字段否则当没数据处理
+                    if (data.data.scrapOrderInfoList && data.data.scrapOrderInfoList.length) {
+                        data.data.scrapOrderInfoList.forEach(function (item, index) {
+                            html += '<tr class="agd" data-id="1" data-type="gd" data-wlh="'+item.matnr+'">'
+                                +'<td class="td">'+item.matnr+'</td>'
+                                +'<td class="td">'+item.scrap+'</td>'
+                                +'<td class="td">'+item.scrapDayRate+'</td>'
+                                +'<td class="td">'+item.scrapMonthRate+'</td>'
+                                +'</tr>'
+
+                        })
+                        $("#table2").append(html)
+                    }
+                }
+            },
+            getData: function (data, type, str) {
+                // 把 “损耗量” 数据单独提取出来,,,检测后台返回过来的接口正常，并且data.data不是null，否则当后台返回出错
+                if (data.code == 'success' && data.data instanceof Object) {
+                    // 检测后台封装到wknumLossKanbanItemList的数据是有数据的，不是空数组，并且有这个字段否则当没数据处理
+                    if (data.data.wknumLossKanbanItemList && data.data.wknumLossKanbanItemList.length) {
+                        var SHL = []
+                        data.data.wknumLossKanbanItemList.forEach(function (item, index) {
+                        	if (str) {
+                        		SHL.push(item[type])
+                        	} else {
+                                console.log(item[type])
+                                let num = item[type] ? item[type] : '0'
+                        		SHL.push(parseFloat(num))
+                        	}
+                        })
+                        return SHL.reverse()
+                    } else {
+                        return []
+                    }
+                } else {
+                    return []
+                }
+            },
+            getData2: function (data, type) {
+                // 把 “损耗量” 数据单独提取出来,,,检测后台返回过来的接口正常，并且data.data不是null，否则当后台返回出错
+                if (data.code == 'success' && data.data instanceof Object) {
+                    // 检测后台封装到wknumLossKanbanItemList的数据是有数据的，不是空数组，并且有这个字段否则当没数据处理
+                    if (data.data.plineLossKanbanItemList && data.data.plineLossKanbanItemList.length) {
+                        var SHL = []
+                        data.data.plineLossKanbanItemList.forEach(function (item, index) {
+                            SHL.push(parseFloat(item[type]))
+                        })
+                        return SHL
+                    } else {
+                        return []
+                    }
+                } else {
+                    return []
+                }
+            },
+            getMax: function (data) {
+                var data = data
+                var maxArray = data.sort(function (a, b) {
+                    return b - a;
+                })
+                var maxV = maxArray[0]
+                var max = maxV + (maxV * 0.2)
+                return max
+            },
+            getMax2: function (data) {
+                var data = data
+                var maxArray = data.sort(function (a, b) {
+                    return b - a;
+                })
+                return maxArray[0]
+            },
+            getMin: function (data) {
+                var data = data
+                var minArr = data.sort(function (a, b) {
+                    return a - b;
+                })
+                return minArr[0]
+            }
+        }
+
+        echart1Obj.ajax()
+        var type
+        $("input[name='radio']").change(function(item, index){
+            var val = $(this).val()
+            if (val == 1) {
+                echart1Obj.ajax('s',0)
+            } else {
+                echart1Obj.ajax('s',1)
+            }
+        })
+
+        $("input[name='radio2']").change(function(item, index){
+            var val = $(this).val()
+            if (val == 1) {
+                echartsTimeClass = 0
+                echart1Obj.ajax('x',0, type)
+             } else {
+                echartsTimeClass = 1
+                echart1Obj.ajax('x',1, type)
+            }
+        })
+
+        $("#cart-room").on('click', 'span', function () {
+            $("#cart-room span").css('background','#8D8D8D')
+            $(this).css('background','red')
+            type = $(this).data('type')
+            echartsTimeClassType = type
+        	echart1Obj.ajax('x', echartsTimeClass, type)
+        })
+    })
+	// 右上角表格 点击调用后台请求接口数据
+    function tableHtmlAjax (wknum, fn) {
+    	$("#echart1-modal3 .tr-remove").remove()
+        $.ajax({
+        	// url: '${kanBanDataUrl}' + 'getOrderWknumLossDetailByWknum' + '?menuCode=${menuCode}',
+            url: 'https://www.xiaoweiba8.com/getechartdata3',
+            data: {wknum: wknum},
+            type: 'get',
+            dataType:'json',
+            success: function(data){
+               var html = ''
+                if (data.code == 'success' && data.data instanceof Array) {
+                    // 检测后台封装到wknumLossKanbanItemList的数据是有数据的，不是空数组，并且有这个字段否则当没数据处理
+                    if (data.data && data.data.length) {
+                        var colorClass = '';
+                        var rate = '';
+                        data.data.forEach(function (item, index) {
+                            item.sonLossAmount < 0 ? colorClass='colorRed' : colorClass=''
+                            rate = item.sonLossAmount <= 0 ? '0.00' : (parseFloat(item.sonLossAmount/item.standardAmount)*100).toFixed(2)
+                            html += '<tr class="agd tr-remove" data-type="gd">'
+                                +'<td class="td">'+item.wknum+'</td>'
+                                +'<td class="td">'+item.wktype+'</td>'
+                                +'<td class="td '+ colorClass +'">'+item.sonLossAmount+'</td>'
+                                +'<td class="td">'+item.standardAmount+'</td>'
+                                +'<td class="td">'+item.feedAmount+'</td>'
+                                +'<td class="td">'+item.goodReturnAmount+'</td>'
+                                +'<td class="td">'+item.pline+'</td>'
+                                +'<td class="td">'+item.crdate+'</td>'
+                                +'<td class="td">'+item.matnr+'</td>'
+                                +'<td class="td">'+ rate +'%'+'</td>'
+                                +'</tr>'
+                        })
+                        $("#echart1-modal3").append(html)
+                        fn()
+                    }
+                }
+            }
+        })
+    }
+
+// 右下角表格 点击调用后台请求接口数据
+    function tableHtmlAjax2 (wknum, fn) {
+    	$("#echart1-modal4 .tr-remove").remove()
+        $.ajax({
+        	// url: '${kanBanDataUrl}' + 'getOrderHighMatnrLossDetail' + '?menuCode=${menuCode}',
+            url: 'https://www.xiaoweiba8.com/getechartdata3',
+            data: {matnr: wknum},
+            type: 'get',
+            dataType:'json',
+            success: function(data){
+               var html = ''
+                if (data.code == 'success' && data.data instanceof Array) {
+                    // 检测后台封装到wknumLossKanbanItemList的数据是有数据的，不是空数组，并且有这个字段否则当没数据处理
+                    if (data.data && data.data.length) {
+                        var colorClass = '';
+                        var rate = '';
+                        data.data.forEach(function (item, index) {
+                            var idx = parseInt(index) + 1
+                            console.log(item.markDate, 'item.markDate')
+                            item.sonLossAmount < 0 ? colorClass='colorRed' : colorClass=''
+                            rate = item.sonLossAmount <= 0 ? '0.00' : (parseFloat(item.sonLossAmount/item.standardAmount)*100).toFixed(2)
+                            html += '<tr class="agd tr-remove" data-type="gd">'
+                                +'<td class="td">'+ idx +'</td>'
+                                +'<td class="td">'+(item.markDate).substr(0,19)+'</td>'
+                                +'<td class="td '+ colorClass +'">'+item.pline+'</td>'
+                                +'<td class="td">'+item.matnr+'</td>'
+                                +'<td class="td">'+item.pickupCount+'</td>'
+                                +'<td class="td">'+item.scrap+'</td>'
+                                +'<td class="td">'+item.scrapDayRate+'</td>'
+                                +'</tr>'
+                        })
+                        $("#echart1-modal4").append(html)
+                        		var html = $("div.echart1-modal4").html()
+                        fn(html)
+                    } else {
+                       alert('暂无数据')
+                    }
+                }
+            }
+        })
+    }
+
+    // 获取 点击图标弹框表格
+    function tableHtmlAjax3 (obj, fn) {
+    	$("#echart1-modal4 .tr-remove").remove()
+        $.ajax({
+        	// url: '${kanBanDataUrl}' + 'getOrderHighMatnrLossDetail' + '?menuCode=${menuCode}',
+            url: 'https://www.xiaoweiba8.com/getechartdata4',
+            data: obj,
+            type: 'get',
+            dataType:'json',
+            success: function(data){
+               var html = ''
+                if (data.code == 'success' && data.data instanceof Array) {
+                    // 检测后台封装到wknumLossKanbanItemList的数据是有数据的，不是空数组，并且有这个字段否则当没数据处理
+                    if (data.data && data.data.length) {
+                        var colorClass = '';
+                        var rate = '';
+                        data.data.forEach(function (item, index) {
+                            var idx = parseInt(index) + 1
+                            item.sonLossAmount < 0 ? colorClass='colorRed' : colorClass=''
+                            rate = item.sonLossAmount <= 0 ? '0.00' : (parseFloat(item.sonLossAmount/item.standardAmount)*100).toFixed(2)
+                            html += '<tr class="agd tr-remove" data-type="gd">'
+                                +'<td class="td">'+ idx +'</td>'
+                                +'<td class="td">'+item.wknum+'</td>'
+                                +'<td class="td '+ colorClass +'">'+item.standardAmount+'</td>'
+                                +'<td class="td">'+item.wknumLossRate+'</td>'
+                                +'<td class="td">'+item.sonLossAmunt+'</td>'
+                                +'</tr>'
+                        })
+                        $("#echart1-modal2").append(html)
+                        var html = $("div.echart1-modal2").html()
+                        fn(html)
+                    } else {
+                       alert('暂无数据')
+                    }
+                }
+            }
+        })
+    }
+
+    function change(t) {
+        if (t < 10) {
+            return "0" + t;
+        } else {
+            return t;
+        }
+    }
+    //获取右上角的时间
+    getTime()
+    function getTime() {
+        var today = new Date();
+        var weekday = today.getDay();
+        var week = null;
+        var year = today.getFullYear();
+        var month = change(today.getMonth() + 1);
+        var day = change(today.getDate());
+        var hour = change(today.getHours());
+        var minute = change(today.getMinutes());
+        var second = change(today.getSeconds());
+        switch (weekday) {
+            case 0:
+                week = "星期日";
+                break;
+            case 1:
+                week = "星期一";
+                break;
+            case 2:
+                week = "星期二";
+                break;
+            case 3:
+                week = "星期三";
+                break;
+            case 4:
+                week = "星期四";
+                break;
+            case 5:
+                week = "星期五";
+                break;
+            case 6:
+                week = "星期六";
+                break;
+            default:
+                week = "未知";
+                break;
+        }
+        var time = hour + ':' + minute + ':' + second + ' ';
+        var timeNew = year + '/' + month + '/' + day
+        $('#dateYM').text(timeNew)
+		$('#dateHS').text(time)
+    }
+    setInterval(function () {
+        getTime()
+    }, 1000)
+</script>
+
+
+
 <script type="text/javascript">
+	// 滚动条
+	$(function () {
+		$('.echarts1-tablecon,.echarts2-tablecon').niceScroll({
+		    cursorcolor: "#999",//#CC0071 光标颜色
+		    cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+		    touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+		    cursorwidth: "10px", //像素光标的宽度
+		    cursorborder: "0", // 	游标边框css定义
+		    cursorborderradius: "10px",//以像素为光标边界半径
+		    autohidemode: false //是否隐藏滚动条
+		});
+	})
+</script>
+<script type="text/javascript">
+function modalEchartGlobal (){
+    var wknumTime = 0
+    var wknumType= ''
+	var modalEchart = function (name) {
+		$.ajax({
+	        // url:  '${kanBanDataUrl}' + 'getLineLossKanbanInfos' + '?menuCode=${menuCode}',
+            url:  'https://www.xiaoweiba8.com/getechartdata2',
+	        data: {wknumTime: name, wknumType: s},
+	        type: 'get',
+	        dataType:'json',
+	        success: function(echarts1Data){
+	            var data = echarts1Data
+				var echart3 = echarts.init($("#echarts3").get(0))
+				// 损耗量
+				var barData = [];
+				// 整体损耗率
+				var lineData = [];
+				// 设备抛料率
+				var lineSB = []
+				var // 高损物料抛料率
+				lineGS = []
+				var width = 20
+				var getData = function (type) {
+					var SHL = []
+					// 把 “损耗量” 数据单独提取出来,,,检测后台返回过来的接口正常，并且data.data不是null，否则当后台返回出错
+		            if (data.code == 'success' && data.data instanceof Array) {
+		                    var SHL = []
+		                    data.data.forEach(function (item, index) {
+		                    	if (!item[type]) {
+		                    		item[type] = 0
+		                    		SHL.push(parseFloat(item[type]))
+		                    	} else {
+		                    		SHL.push(parseFloat(item[type]))
+		                    	}
 
+		                    })
+		                    return SHL
+		            } else {
+		                return []
+		            }
+				}
+                // 损耗量为负数的时候，则为0
+				var setL = function(datas) {
+                   return datas.map(function(item, index){
+                     return item < 0 ? datas[index] = 0.00 : datas[index] = item
+                   })
+                }
+				var getMData = function () {
+					number = []
+					barData = []
+					// 损耗量
+					barData = getData('sonLossAmunt') || []
+					// 整体损耗率
+					lineData = setL(getData('wknumLossRate')) || []
+					// 设备抛料率
+					lineSB = getData('scrapRate') ||  []
+					// 高损物料抛料率
+					// lineGS = getData('wknumLossRate') ||  [110, 120, 111]
+					console.log(lineData)
+				}
 
-// let arr1 = [{status: 1}, { status: 1 }, { status: null }]
-// window.Array.prototype.getStatus = function () {
-// 	let arr = this
-// 	let bol1 = arr.some((item, index) => {
-// 		return parseInt(item.status) === 1
-// 	})
-// 	let bol2 = arr.some((item, index) => {
-// 		return parseInt(item.status) === 0
-// 	})
-// 	let bol3 = arr.every((item, index) => {
-// 		return typeof item.status === "object"
-// 	})
-// 	let status = ''
-// 	if (bol1) {
-// 		status = 'A'
-// 	}
-// 	if (bol2) {
-// 		status = 'B'
-// 	}
-// 	if (bol3) {
-// 		status = 'AB'
-// 	}
-// 	return status
-// }
-// const status = arr1.getStatus()
-let arrobj = [
-	{
-		matanr: '1',
-		receiveQty: '1'
-	},
-	{
-		matanr: '1',
-		receiveQty: '0'
-	},
-	{
-		matanr: '3',
-		receiveQty: null
-	},
-	{
-		matanr: '4',
-		receiveQty: ''
-	},
-	{
-		matanr: '5',
-		receiveQty: '0'
+				var setSetting = function () {
+					var setting = {
+						grid: {
+							left: 30,
+							right: 30,
+							show: true,
+							containLabel: true
+						},
+						title: {
+				            text: '',
+				            subtext: '车间详情',
+				            x:'center',
+					        y:'top',
+					        textAlign:'center',
+					        top: 8
+				        },
+				        legend: {
+				        	// '损耗数量', '整体损耗率', '整体损耗率目标', '设备抛料率', '高损物料抛料率'
+					        data: [
+					        	{
+					        		name: '损耗数',
+					        	},
+					        	{
+					        		name: '整体损耗率',
+					        	}
+					        ],
+					        align: 'left',
+					        center: 'center',
+					        bottom: 10,
+					        type: 'scroll'
+					    },
+				        tooltip: {},
+				        xAxis: {
+				            data: ['SMT一车间','SMT二车间','SMT三车间']
+				        },
+				        yAxis: [
+					        {
+					        	offset: '0',
+					        	position: 'left',
+					        	axisLine: {
+					        		show: true,
+					        		onZeroAxisIndex: 1
+					        	},
+					        	axisLabel: {
+					        		interval: 1,
+					        		formatter: function(value, index){
+					        			return value
+					        		}
+					        	},
+					        	axisTick: {
+					        		alignWithLabel: true
+					        	},
+					        	axisPointer: {
+					        		show: true,
+					        		label: {
+					        			show: true
+					        		}
+					        	},
+					        	splitLine: {
+					        		show: true,
+					        		interval: 2
+					        	}
+					        },
+					        {
+					        	offset: '0',
+					        	axisLabel: {
+					        		formatter: function(value, index){
+					        			return value + '%'
+					        		}
+					        	},
+					        	axisLine: {
+					        		onZeroAxisIndex: 0,
+					        		show:true
+					        	},
+					        	splitLine: {
+					        		show: true
+					        	},
+					        	axisTick:{show:true},
+					        	position: 'right'
+					        	// axisLabel:{show:false}
+					        }
+				        ],
+						series: [
+							{
+								type: 'bar',
+								name: '损耗数',
+								data: barData,
+								itemStyle: {
+									color: '#0090ff'
+								}
+							},
+							{
+								type:'line',
+								name: '整体损耗率',
+								data: lineData,
+								itemStyle: {
+									color: '#ff8400'
+								},
+								yAxisIndex:1,
+								label: {
+									show: true,
+									color:'#000',
+									formatter:function(item, index){
+									    console.log('整体损耗率')
+									   console.log(item)
+										return (item.data) + '%'
+									}
+								}
+							}
+						]
+					}
+					return setting
+				}
+
+				// 获取和整理物料损耗监控数据
+				getMData()
+				// 生成图标
+				echart3.setOption(setSetting())
+				// 图标点击
+				clickFn(echart3)
+
+	        }
+	    })
 	}
-]
-window.Array.prototype.getDifferentArrayLength2 = function () {
-	let arrlen = []
-	let arrlen2 = []
-	let yArr = this
-	// 为了防止后台返回receiveQty不统一情况，这里做统一处理，反正为null，''，undefind，0都同意改成'0'
-	yArr.forEach(function (item, index) {
-		if (!item.receiveQty) {
-			item.receiveQty = '0'
-		}
-	})
-	var getArray = function (res) {
-		let len = 0
-		let arr = []
-		// 取出相同物料号的一组
-		yArr.forEach(function (item, index) {
-			if (item.matanr === res.matanr) {
-				arr.push(item)
-			}
-		})
-		// 相同物料号中只要有一组不为0的返回true
-		let isEmaty = arr.some((someItem, someIndex) => {
-			return someItem.receiveQty !== '0'
-		})
-		// 如果一组相同物料号里的someItem.receiveQty都为空则放到数组里。
-		if (!isEmaty) {
-			arrlen.push(res)
-		}
+
+	// 点击柱状图弹出框
+	// window.ltEcharts.echart1.on('click','series.bar',function(item){
+	// 	// 调用map.html外面申明的echarts1ModalAjax函数，这个函数在外面发送ajax请求，和里面js代码不搭嘎。
+	// 	// 传个匿名 函数过去，echarts1ModalAjax函数发送ajax请求数据回来，调用匿名函数，并且把后台的值也带过来
+	// 	layer.open({
+	// 		type: 1,
+	// 		skin: 'layui-layer-demo',
+	// 		area: ['600px','450px'],
+	// 		content: '<div id="echarts-box-3"><div id="echarts3"></div></div>',
+	// 		title: '数据'
+	// 	})
+	// 	modalEchart(item.name)
+	// })
+	var nameList = ['工厂', '日期', '车间', '产线', '班别', '工单', '料号', '标准用量', '发斗数', '退斗数', '损耗数', '损耗率', '是否高损物料', '损耗原因', '描述', '改善对策', '责任人'] //table的列名
+	var widthList = [100, 100, 100] //table每列的宽度
+	function clickFn (echart3) {
+		/*echart3.on('click', 'series.bar', function () {
+			var html = $("div.echart1-modal").html()
+				layer.open({
+					type: 1,
+					skin: 'layui-layer-demo',
+					area: ['800','300'],
+					content: '<div style="padding: 10px 15px 15px;">' + html + '<div class="zxf_pagediv"></div></div>',
+					title: '数据'
+				})
+				$(".zxf_pagediv").createPage({
+					pageNum: 20,
+					current: 1,
+					backfun: function(e) {
+						//console.log(e);//回调
+						// 分页1
+						alert(1)
+					}
+				});
+		})*/
 	}
-	// 遍历每种情况
-	yArr.forEach((item, index) => {
-		getArray(item)
-	})
-	// 把所有符合条件的的物料号放到数组里
-	arrlen.forEach((item, index) => {
-		arrlen2.push(item.matanr)
-	})
-	// 返回最终去重个数
-	return [...new Set(arrlen2)].length
+    window.ltEcharts.echart2.on('click', 'series.bar', function (item) {
+        console.log(item)
+            tableHtmlAjax3({
+                floorCode: echartsTimeClassType,
+                pline: item.name,
+                workShopType: echartsTimeClass,
+                menuCode: 'ghyu'
+            }, function () {
+                var html = $("div.echart1-modal2").html()
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-demo',
+                    area: ['800px','300px'],
+                    content: '<div style="padding: 10px 15px 15px;">' + html + '<div class="zxf_pagediv"></div></div>',
+                    title: '数据'
+                })
+            })
+            
+            
+        })
 }
+</script>
+<script type="text/javascript">
+	$(function(){
 
-let res = arrobj.getDifferentArrayLength2()
-console.log(res, '%%%%%%')
 
+	// 点击表格,点击按工单
+	$("#table1").on('click', 'tr.agd',function () {
+		//下面两个参数，可根据实际情况定义和取出，可能会根据这两个参数请求后台数据
+		var id = $(this).data('wknum')
+		var type = $(this).data('type')
+		tableHtmlAjax(id, function(){
+			var html = $("div.echart1-modal3").html()
+			layer.open({
+				type: 1,
+				skin: 'layui-layer-demo',
+				area: ['1200px','600px'],
+				content: '<div style="padding: 10px 15px 15px;height: 200px;">' + html + '<div class="zxf_pagediv"></div></div>',
+				title: '数据'
+			})
+			// $(".zxf_pagediv").createPage({
+			// 	pageNum: 20,
+			// 	current: 1,
+			// 	backfun: function(e) {
+			// 		//console.log(e);//回调
+			// 		// 分页3
+			// 		alert(3)
+			// 	}
+			// });
+		})
+	})
+
+	// 点击表格,点击按高损耗
+	$("#table2").on('click', 'tr.agd',function () {
+	    console.log('111')
+		//下面两个参数，可根据实际情况定义和取出，可能会根据这两个参数请求后台数据
+		var id = $(this).data('id')
+		var type = $(this).data('wlh')
+
+		tableHtmlAjax2(type, function(html){
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-demo',
+                area: ['1200px','600px'],
+                content: '<div style="padding: 10px 15px 15px;">' + html + '<div class="zxf_pagediv"></div></div>',
+                title: '数据'
+            })
+		})
+
+		// <!--$(".zxf_pagediv").createPage({-->
+		// 	<!--pageNum: 20,-->
+		// 	<!--current: 1,-->
+		// 	<!--backfun: function(e) {-->
+		// 		<!--//console.log(e);//回调-->
+		// 		<!--// 分页4-->
+		// 		<!--alert(4)-->
+		// 	<!--}-->
+		// <!--});-->
+	})
+})
 </script>
 </body>
 </html>
